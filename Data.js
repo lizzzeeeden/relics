@@ -12,6 +12,7 @@ cc.Class({
     onLoad() {
         //常驻节点
         cc.game.addPersistRootNode(this.node);
+        
         //cc.log(cc.loader.isAutoRelease(this.node));
         //cc.log(cc.game.isPersistRootNode(this.node));
     },

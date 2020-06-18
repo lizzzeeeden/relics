@@ -67,6 +67,7 @@ cc.Class({
     },
     //移动
     onTouchMove: function (event) {
+        this.setSiblingIndex(9);
         var delta = event.touch.getDelta();
             this.y += delta.y;
             this.x += delta.x;
