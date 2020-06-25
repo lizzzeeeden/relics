@@ -7,8 +7,14 @@ cc.Class({
         score: 0,
         scoreLabel: cc.Node,
         HPLabel: cc.Node,
-        dataNode: cc.Node,
-        streak:cc.Node,
+        streak: cc.Node,
+        canvas: cc.Node,
+        
+        level: 0,
+        relics: {
+            type: cc.Boolean,
+            default:[],
+        },
     },
 
 
@@ -21,28 +27,54 @@ cc.Class({
         //玩家移动
         this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this.node);
 
-        //得到常驻节点
-        this.dataNode=cc.director.getScene().getChildByName('dataNode');
-        
+         //得到等级
+        this.level = this.canvas.getComponent("GameController").dataNode.getComponent("Data").GetLevel();
+        this.relics = this.canvas.getComponent("GameController").dataNode.getComponent("Data").relics;
     },
 
     //接到碎片检测
     onCollisionEnter: function (other, self) {
         if (other.node.group == 'chip') {
             other.node.destroy();
-            this.score++;
+            this.score+=other.node.getComponent("ChipMove").getmark();//计算得分
             //cc.log(this.score);
             this.scoreLabel.getComponent(cc.Label).string =
                 "Score:" + this.score.toString();
+            
+            //判断是否达到得分
+            switch (this.level)
+            {
+                case '1':
+                    if (this.score >= 11000) {
+                        this.relics[3] = true;
+                        this.canvas.getComponent("GameController").TimeOver();
+                    }
+                    break;
+                case '2':
+                    if (this.score >= 15000) {
+                        this.relics[4] = true;
+                    }
+                    break;
+                case '3':
+                    if (this.score >= 15000) {
+                        this.relics[5] = true;
+                    }
+                    break;
+            }
         }  else if (other.node.group == 'bomb') {
             other.node.destroy();
+
+            //判断是否死亡
+        if (this.HP <= 1) {
+            this.canvas.getComponent("GameController").TimeOver();
+            this.node.active = false;
+            this.streak.active = false;
+        }
+
             this.HP--;
             this.HPLabel.getComponent(cc.Label).string =
                 "HP:" + this.HP.toString();
-        }else if(other.node.group=='wrongchip'){
-            other.node.destroy();
         }
-        
     },
 
 
@@ -62,8 +94,8 @@ cc.Class({
     onDestroy() {
         this.node.off(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove, this.node);
     },
- 
 
+    //拖尾效果
     MoveStreak: function () {
         var pz = this.node.position;
         pz.y -= 50;

@@ -9,14 +9,19 @@ cc.Class({
         C2Level: cc.Node,
         C3Level: cc.Node,
         dataNode: cc.Node,
-        gameCavas: cc.Node,
         preIntro1:cc.Node,
         preIntro2:cc.Node,
         preIntro3: cc.Node,
         chapter: '0',
+        level:'0',
         tmpLNode: cc.Node,
         nextButton: cc.Node,
-        startButton:cc.Node,
+        startButton: cc.Node,
+        relics: {
+            type: cc.Boolean,
+            default:[],
+        },
+
     },
 
     // start () {
@@ -27,6 +32,17 @@ cc.Class({
         //整了一天都在整这个bug终于整好了我杀cocos
         //场景切换的常驻脚本不能直接挂载
         this.dataNode = cc.director.getScene().getChildByName("DataNode");
+        this.relics = this.dataNode.getComponent("Data").relics;
+        this.level = this.dataNode.getComponent("Data").GetLevel();
+        this.chapter = this.dataNode.getComponent("Data").GetChapter();
+
+        //下一关
+        var isNextLevel = this.dataNode.getComponent("Data").GetIsNextLevel();
+        if (isNextLevel == true) {
+            this.StartGame();
+            this.ShowLevelAgain();
+            this.dataNode.getComponent("Data").ChangeIsNextLevel(false);
+        }
      },
 
 
@@ -36,15 +52,9 @@ cc.Class({
         this.choose.active = true;
     },
 
-    QuitGame: function () {
-        cc.director.end();
-    },
-
-    PauseGame: function () {
-        cc.director.pause();
-        this.node.active = true;
-        this.node.setSiblingIndex(this.node.getParent().childrenCount);
-    },
+    // QuitGame: function () {
+    //     cc.director.end();
+    // },
 
     ResumeGame: function () {
         cc.director.resume();
@@ -58,6 +68,7 @@ cc.Class({
     },
 
     GotoPuzzle: function () {
+        cc.director.resume();
         cc.director.loadScene("Puzzle");
     },
 
@@ -69,6 +80,17 @@ cc.Class({
         cc.director.loadScene("Relics");
     },
 
+    Restart: function () {
+        cc.director.resume();
+        cc.director.loadScene("Game");
+    },
+
+    PauseGame: function () {
+        cc.director.pause();
+        this.node.active = true;
+        this.node.setSiblingIndex(this.node.getParent().childrenCount);
+    },
+
     NextIntro: function () {
         this.tmpLNode.getChildByName("BackIntro").active = false;
         this.tmpLNode.getChildByName("PlayIntro").active = true;
@@ -76,27 +98,18 @@ cc.Class({
         this.nextButton.active = false;
     },
 
+
+    NextLevel: function () {
+        cc.director.resume();
+        this.node.parent.getComponent("GameController").dataNode.getComponent("Data").isNextLevel = true;
+        cc.director.loadScene("StartUI");
+
+    },
+
     //展示选择章节关卡
     ShowLevel: function (event, customEventData) {
         this.chapter = customEventData;
-        switch (customEventData)
-        {
-            case '1':
-                this.C1Level.active = true;
-                this.C2Level.active = false;
-                this.C3Level.active = false;
-                break;
-            case '2':
-                this.C2Level.active = true;
-                this.C1Level.active = false;
-                this.C3Level.active = false;
-                break;
-            case '3':
-                this.C3Level.active = true;
-                this.C1Level.active = false;
-                this.C2Level.active = false;
-                break;
-        }
+        this.ShowLevelAgain();
         this.dataNode.getComponent("Data").ChangeChapter(customEventData);
         //cc.log(this.dataNode.getComponent("Data").GetChapter());
     },
@@ -145,4 +158,40 @@ cc.Class({
     },
 
 
+    //备用展示关卡函数
+    ShowLevelAgain: function () {
+        switch (this.chapter)
+            {
+                case '1':
+                    this.C1Level.active = true;
+                    if (this.relics[0]==true)
+                        this.C1Level.getChildByName("Level2").active = true;
+                    if (this.relics[1]==true)
+                        this.C1Level.getChildByName("Level3").active = true;
+                
+                    this.C2Level.active = false;
+                    this.C3Level.active = false;
+                    break;
+                case '2':
+                    this.C2Level.active = true;
+                    if (this.relics[3]==true)
+                        this.C2Level.getChildByName("Level2").active = true;
+                    if (this.relics[4]==true)
+                        this.C2Level.getChildByName("Level3").active = true;
+                        
+                    this.C1Level.active = false;
+                    this.C3Level.active = false;
+                    break;
+                case '3':
+                    this.C3Level.active = true;
+                    if (this.relics[6]==true)
+                        this.C3Level.getChildByName("Level2").active = true;
+                    if (this.relics[7]==true)
+                        this.C3Level.getChildByName("Level3").active = true;
+                        
+                    this.C1Level.active = false;
+                    this.C2Level.active = false;
+                    break;
+            }
+    }
 });

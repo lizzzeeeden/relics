@@ -4,10 +4,13 @@ cc.Class({
 
     properties: {
         chipPrefab: cc.Prefab,
-        
         bombPrefab: cc.Prefab,
         wrongChipPrefab:cc.Prefab,
+        chip1Prefab:cc.Prefab,
+        chip2Prefab:cc.Prefab,
         timeLabel: cc.Node,
+        Canvas:cc.Node,
+
         chipTimeLeap: 1,
         bombTimeLeap: 1.73,
         wrongChipTimeLeap: 1.5,
@@ -26,7 +29,12 @@ cc.Class({
         this.schedule(function () {
             this.CreatWrongChip();
         }, this.wrongChipTimeLeap);
-        
+        this.schedule(function () {
+            this.CreateChip1();
+        }, this.wrongChipTimeLeap+1);
+        this.schedule(function () {
+            this.CreateChip2();
+        }, this.wrongChipTimeLeap+2);
     },
 
     //生成碎片
@@ -44,6 +52,14 @@ cc.Class({
     CreatWrongChip() {
         var bomb = cc.instantiate(this.wrongChipPrefab);
         bomb.parent = this.node;
+    },
+    CreateChip1() {
+        var chip = cc.instantiate(this.chip1Prefab);
+        chip.parent = this.node;
+    },
+    CreateChip2() {
+        var chip = cc.instantiate(this.chip2Prefab);
+        chip.parent = this.node;
     },
     
 });

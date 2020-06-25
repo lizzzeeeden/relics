@@ -13,12 +13,7 @@ cc.Class({
              default: [],
          },
          
-    bFinished:{
-            type: cc.Node,
-            default:null,
-        },
-    
-        
+        bFinished:cc.Node,
     },
 
     onLoad() {
@@ -28,6 +23,7 @@ cc.Class({
         for (var i = 0; i < this.chil.length; i++){
             this.bFixs[i] = this.chil[i].getComponent("PuzzleController");
         }
+        
        // cc.log(this.bFixs.length);
     },
 
@@ -36,17 +32,23 @@ cc.Class({
     // },
 
     update(dt) {
+        //逐个检测是否拼正确
         var i = 0;
         for (i = 0; i < this.bFixs.length; i++){
             //cc.log(this.bFixs[i].bFit);
-            if (!this.bFixs[i].bFit) {
+            if (this.bFixs[i].bFit==false) {
                 return;
             }
         }
         //延时显示胜利画面
-        this.scheduleOnce(function(){
-            this.bFinished.active=true; 
-       },0.7);
+        this.scheduleOnce(function () {
+            this.bFinished.active = true;
+            cc.director.pause();
+        }, 0.7);
+         //解锁馆藏
+         this.node.parent.parent.getComponent("Puzzle").UnlockRelics();
         
     },
+
+   
 });

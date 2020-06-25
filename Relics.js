@@ -30,17 +30,17 @@ cc.Class({
     //判断是否达成解锁条件
     onLoad() {
         this.dataNode = cc.director.getScene().getChildByName("DataNode");
-        var relics = this.dataNode.getComponent("Data").relics;
+        var isChapterFin = this.dataNode.getComponent("Data").isChapterFin;
         //relics[2] = true;
-        if (relics[2]) {
+        if (isChapterFin[0]==true) {
             this.img1.active = false;
             this.chapter1.active = true;
         }
-        if (relics[5]) {
+        if (isChapterFin[1]==true) {
             this.img2.active = false;
             this.chapter2.active = true;
         }
-        if (relics[8]) {
+        if (isChapterFin[2]==true) {
             this.img3.active = false;
             this.chapter3.active = true;
         }
