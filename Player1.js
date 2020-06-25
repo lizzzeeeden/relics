@@ -32,7 +32,9 @@ cc.Class({
             other.node.destroy();
             this.HP--;
             this.HPLabel.getComponent(cc.Label).string =
-                "HP:" + this.HP.toString();
+                "HP:" + this.HP.toString();           
+        }else if(other.node.group=='wrongchip'){
+            other.node.destroy();
         }
     },
 

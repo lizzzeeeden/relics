@@ -3,7 +3,7 @@
 cc.Class({
     extends: cc.Component,
     properties: {
-        HP: 0,
+        HP: 3,
         score: 0,
         scoreLabel: cc.Node,
         HPLabel: cc.Node,
@@ -38,6 +38,8 @@ cc.Class({
             this.HP--;
             this.HPLabel.getComponent(cc.Label).string =
                 "HP:" + this.HP.toString();
+        }else if(other.node.group=='wrongchip'){
+            other.node.destroy();
         }
     },
 

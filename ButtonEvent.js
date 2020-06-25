@@ -14,7 +14,9 @@ cc.Class({
         preIntro2:cc.Node,
         preIntro3: cc.Node,
         chapter: '0',
-        tmpLNode:cc.Node,
+        tmpLNode: cc.Node,
+        nextButton: cc.Node,
+        startButton:cc.Node,
     },
 
     // start () {
@@ -41,6 +43,7 @@ cc.Class({
     PauseGame: function () {
         cc.director.pause();
         this.node.active = true;
+        this.node.setSiblingIndex(this.node.getParent().childrenCount);
     },
 
     ResumeGame: function () {
@@ -62,9 +65,15 @@ cc.Class({
         cc.director.loadScene("Game");
     },
 
+    GotoRelics: function () {
+        cc.director.loadScene("Relics");
+    },
+
     NextIntro: function () {
         this.tmpLNode.getChildByName("BackIntro").active = false;
         this.tmpLNode.getChildByName("PlayIntro").active = true;
+        this.startButton.active = true;
+        this.nextButton.active = false;
     },
 
     //展示选择章节关卡
@@ -129,8 +138,11 @@ cc.Class({
                 break;
         }
 
+        this.nextButton.active=true,
         this.choose.active = false;
         //cc.log(this.dataNode.getComponent("Data").GetLevel())
         //cc.director.loadScene("Game");
     },
+
+
 });

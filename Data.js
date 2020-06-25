@@ -5,6 +5,10 @@ cc.Class({
     properties: {
         chapter:0,
         level: 0,
+        relics: {
+            type: cc.Boolean,
+            default:[],
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -12,7 +16,7 @@ cc.Class({
     onLoad() {
         //常驻节点
         cc.game.addPersistRootNode(this.node);
-        
+        this.relics = [9];
         //cc.log(cc.loader.isAutoRelease(this.node));
         //cc.log(cc.game.isPersistRootNode(this.node));
     },

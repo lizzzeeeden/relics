@@ -7,7 +7,8 @@ cc.Class({
         score: 0,
         scoreLabel: cc.Node,
         HPLabel: cc.Node,
-        dataNode:cc.Node,
+        dataNode: cc.Node,
+        streak:cc.Node,
     },
 
 
@@ -33,13 +34,17 @@ cc.Class({
             //cc.log(this.score);
             this.scoreLabel.getComponent(cc.Label).string =
                 "Score:" + this.score.toString();
-        } else if (other.node.group == 'bomb') {
+        }  else if (other.node.group == 'bomb') {
             other.node.destroy();
             this.HP--;
             this.HPLabel.getComponent(cc.Label).string =
                 "HP:" + this.HP.toString();
+        }else if(other.node.group=='wrongchip'){
+            other.node.destroy();
         }
+        
     },
+
 
     //移动函数
     onTouchMove: function (event) {
@@ -48,10 +53,21 @@ cc.Class({
         this.y += delta.y;
     },
 
+    update(dt)  {
+        //移动墨迹
+        this.MoveStreak();
+    },
+
     //关闭监听
     onDestroy() {
         this.node.off(cc.Node.EventType.TOUCH_MOVE,this.onTouchMove, this.node);
     },
-
  
+
+    MoveStreak: function () {
+        var pz = this.node.position;
+        pz.y -= 50;
+        this.streak.setPosition(pz);
+        //cc.log(this.streak.position);
+    },
 });
